@@ -1,8 +1,11 @@
-import { userStatus } from "src/auth/user-status.enum";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { UserStatus } from "src/auth/user-status.enum";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Item } from "./item.entity";
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class User {
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -10,9 +13,12 @@ export class User {
   username: string;
 
   @Column()
+  @Exclude({ toPlainOnly: true })
   password: string;
 
   @Column()
-  status: userStatus;
+  status: UserStatus;
 
+  @OneToMany(() => Item, (item) => item.user)
+  item: Item[]
 }
